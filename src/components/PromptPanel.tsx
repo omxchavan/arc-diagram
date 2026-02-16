@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDiagramStore } from "@/store/diagramStore";
 
 const EXAMPLE_PROMPTS = [
-    { label: "Chat App Architecture", prompt: "Real-time chat application with WebSocket, message queues, and user auth" },
-    { label: "E-commerce System", prompt: "E-commerce platform with product catalog, shopping cart, payment, and order management" },
-    { label: "Microservices Architecture", prompt: "Microservices architecture with API gateway, service discovery, and event bus" },
-    { label: "AI Pipeline", prompt: "AI/ML pipeline with data ingestion, preprocessing, model training, and deployment" },
-    { label: "Social Media Platform", prompt: "Social media platform with feed, notifications, messaging, and content moderation" },
-    { label: "CI/CD Pipeline", prompt: "CI/CD pipeline with source control, build, test, staging, and production deployment" },
+    { label: "💬 Chat App", prompt: "Real-time chat application with WebSocket, message queues, and user auth" },
+    { label: "🛒 E-commerce", prompt: "E-commerce platform with product catalog, shopping cart, payment, and order management" },
+    { label: "🔗 Microservices", prompt: "Microservices architecture with API gateway, service discovery, and event bus" },
+    { label: "🤖 AI Pipeline", prompt: "AI/ML pipeline with data ingestion, preprocessing, model training, and deployment" },
+    { label: "📱 Social Media", prompt: "Social media platform with feed, notifications, messaging, and content moderation" },
+    { label: "🚀 CI/CD", prompt: "CI/CD pipeline with source control, build, test, staging, and production deployment" },
 ];
 
 const EDIT_SUGGESTIONS = [
@@ -20,6 +20,8 @@ const EDIT_SUGGESTIONS = [
     "Split into microservices",
     "Add a CDN",
     "Add load balancer",
+    "Add message queue",
+    "Add API rate limiting",
 ];
 
 export function PromptPanel() {
@@ -45,7 +47,7 @@ export function PromptPanel() {
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
             className={`
         relative flex flex-col h-full
-        bg-[#111118]/80 backdrop-blur-xl border-r border-[#27272f]
+        bg-[#0e0e16]/95 backdrop-blur-2xl border-r border-[#1e1e2a]
         transition-all duration-300
         ${isCollapsed ? "w-12" : "w-[340px]"}
       `}
@@ -53,15 +55,16 @@ export function PromptPanel() {
             {/* Collapse toggle */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-4 z-10 w-6 h-6 rounded-full bg-[#1e1e28] border border-[#27272f] 
-          flex items-center justify-center text-xs text-zinc-400 hover:text-white hover:border-indigo-500 transition-all"
+                className="absolute -right-3 top-4 z-10 w-6 h-6 rounded-full bg-[#16161d] border border-[#22222e] 
+          flex items-center justify-center text-xs text-zinc-500 hover:text-white hover:border-indigo-500 
+          transition-all shadow-lg shadow-black/20 cursor-pointer"
             >
-                {isCollapsed ? "→" : "←"}
+                {isCollapsed ? "›" : "‹"}
             </button>
 
             {isCollapsed ? (
                 <div className="flex items-center justify-center h-full">
-                    <span className="text-zinc-500 text-xs [writing-mode:vertical-lr] rotate-180 tracking-widest uppercase">
+                    <span className="text-zinc-600 text-[10px] [writing-mode:vertical-lr] rotate-180 tracking-[0.2em] uppercase font-semibold">
                         Prompt
                     </span>
                 </div>
@@ -69,37 +72,48 @@ export function PromptPanel() {
                 <div className="flex flex-col h-full p-5 overflow-y-auto">
                     {/* Header */}
                     <div className="mb-5">
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                            <span className="text-xs font-medium text-indigo-400 uppercase tracking-wider">AI Powered</span>
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="w-5 h-5 rounded-md bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center">
+                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                            </div>
+                            <span className="text-[10px] font-semibold text-indigo-400 uppercase tracking-[0.15em]">
+                                {hasExistingDiagram ? "Edit Mode" : "AI Powered"}
+                            </span>
                         </div>
-                        <h2 className="text-lg font-bold text-white">
-                            {hasExistingDiagram ? "Edit with AI" : "Create a Diagram"}
+                        <h2 className="text-lg font-bold text-white leading-tight">
+                            {hasExistingDiagram ? "Edit with AI" : "Create Diagram"}
                         </h2>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">
                             {hasExistingDiagram
-                                ? "Describe what to change — AI will update your diagram"
-                                : "Describe your system and let AI generate it instantly"}
+                                ? "Describe changes — AI will intelligently update your diagram"
+                                : "Describe your system architecture or idea"}
                         </p>
                     </div>
 
-                    {/* Edit mode badge */}
+                    {/* Edit mode indicator */}
                     <AnimatePresence>
                         {hasExistingDiagram && (
                             <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
-                                className="mb-3 px-3 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20"
+                                className="mb-4"
                             >
-                                <div className="flex items-center gap-2">
-                                    <svg className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    <span className="text-[11px] text-indigo-300">
-                                        Editing mode — {nodes.length} nodes on canvas
-                                    </span>
+                                <div className="px-3 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500/8 to-purple-500/8 border border-indigo-500/15">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-6 h-6 rounded-lg bg-indigo-500/15 flex items-center justify-center flex-shrink-0">
+                                            <svg className="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <span className="text-[11px] text-indigo-300 font-medium">
+                                                {nodes.length} nodes on canvas
+                                            </span>
+                                            <p className="text-[9px] text-zinc-600">AI will modify your existing diagram</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </motion.div>
                         )}
@@ -118,16 +132,18 @@ export function PromptPanel() {
                             rows={4}
                             placeholder={
                                 hasExistingDiagram
-                                    ? "Describe what to change... e.g. 'Add a caching layer between API and DB'"
-                                    : "Describe your system or idea..."
+                                    ? "e.g. 'Add a caching layer between API and database'"
+                                    : "e.g. 'E-commerce platform with microservices...'"
                             }
-                            className="w-full bg-[#0d0d14] border border-[#27272f] rounded-xl px-4 py-3 text-sm text-white 
-                placeholder-zinc-600 resize-none focus:outline-none focus:border-indigo-500/50 
-                focus:shadow-[0_0_0_3px_rgba(99,102,241,0.1)] transition-all"
+                            className="w-full bg-[#0a0a10] border border-[#22222e] rounded-xl px-4 py-3 text-sm text-white 
+                placeholder-zinc-700 resize-none focus:outline-none focus:border-indigo-500/40 
+                focus:shadow-[0_0_0_3px_rgba(99,102,241,0.08)] transition-all duration-200
+                leading-relaxed"
                         />
-                        <span className="absolute bottom-2 right-3 text-[10px] text-zinc-600">
-                            ⌘ + Enter
-                        </span>
+                        <div className="absolute bottom-2.5 right-3 flex items-center gap-1.5">
+                            <kbd className="text-[9px] text-zinc-700 px-1.5 py-0.5 rounded bg-[#16161d] border border-[#22222e]">⌘</kbd>
+                            <kbd className="text-[9px] text-zinc-700 px-1.5 py-0.5 rounded bg-[#16161d] border border-[#22222e]">↵</kbd>
+                        </div>
                     </div>
 
                     {/* Generate / Edit button */}
@@ -136,12 +152,12 @@ export function PromptPanel() {
                         whileTap={{ scale: 0.98 }}
                         onClick={handleGenerate}
                         disabled={!prompt.trim() || isGenerating}
-                        className="w-full py-3 rounded-xl font-semibold text-sm text-white
+                        className="w-full py-3 rounded-xl font-semibold text-sm text-white cursor-pointer
               bg-gradient-to-r from-indigo-600 to-purple-600
               hover:from-indigo-500 hover:to-purple-500
-              disabled:opacity-40 disabled:cursor-not-allowed
-              shadow-[0_4px_15px_rgba(99,102,241,0.3)]
-              hover:shadow-[0_6px_20px_rgba(99,102,241,0.4)]
+              disabled:opacity-30 disabled:cursor-not-allowed
+              shadow-[0_4px_20px_rgba(99,102,241,0.25)]
+              hover:shadow-[0_6px_25px_rgba(99,102,241,0.35)]
               transition-all duration-300 flex items-center justify-center gap-2"
                     >
                         {isGenerating ? (
@@ -149,16 +165,16 @@ export function PromptPanel() {
                                 <motion.div
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                    className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                                    className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full"
                                 />
-                                {hasExistingDiagram ? "Updating diagram..." : "Designing your diagram..."}
+                                <span>{hasExistingDiagram ? "Updating..." : "Generating..."}</span>
                             </>
                         ) : (
                             <>
                                 {hasExistingDiagram ? (
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                 ) : (
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +182,7 @@ export function PromptPanel() {
                                             d="M13 10V3L4 14h7v7l9-11h-7z" />
                                     </svg>
                                 )}
-                                {hasExistingDiagram ? "Update Diagram" : "Generate Diagram"}
+                                <span>{hasExistingDiagram ? "Update Diagram" : "Generate Diagram"}</span>
                             </>
                         )}
                     </motion.button>
@@ -178,75 +194,87 @@ export function PromptPanel() {
                                 initial={{ opacity: 0, y: -10, height: 0 }}
                                 animate={{ opacity: 1, y: 0, height: "auto" }}
                                 exit={{ opacity: 0, y: -10, height: 0 }}
-                                className="mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs"
+                                className="mt-3 p-3 rounded-xl bg-red-500/8 border border-red-500/15 text-red-400 text-xs flex items-start gap-2"
                             >
-                                {error}
+                                <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{error}</span>
                             </motion.div>
                         )}
                     </AnimatePresence>
 
                     {/* Divider */}
                     <div className="flex items-center gap-3 my-5">
-                        <div className="flex-1 h-px bg-[#27272f]" />
-                        <span className="text-[10px] text-zinc-600 uppercase tracking-wider">
-                            {hasExistingDiagram ? "Quick Edits" : "Examples"}
+                        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#22222e] to-transparent" />
+                        <span className="text-[9px] text-zinc-600 uppercase tracking-[0.2em] font-semibold">
+                            {hasExistingDiagram ? "Quick Edits" : "Try These"}
                         </span>
-                        <div className="flex-1 h-px bg-[#27272f]" />
+                        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#22222e] to-transparent" />
                     </div>
 
-                    {/* Suggestions or examples based on mode */}
-                    <div className="space-y-2">
+                    {/* Suggestions or examples */}
+                    <div className="space-y-1.5">
                         {hasExistingDiagram ? (
-                            /* Edit suggestions as chips */
-                            <div className="flex flex-wrap gap-2">
+                            /* Edit suggestion chips */
+                            <div className="flex flex-wrap gap-1.5">
                                 {EDIT_SUGGESTIONS.map((suggestion, i) => (
                                     <motion.button
                                         key={i}
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.05 * i }}
+                                        transition={{ delay: 0.04 * i }}
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setPrompt(suggestion)}
-                                        className="px-3 py-1.5 rounded-full text-[11px] font-medium
-                      bg-[#16161d]/80 border border-[#27272f] text-zinc-400
-                      hover:bg-indigo-500/10 hover:border-indigo-500/30 hover:text-indigo-300
-                      transition-all"
+                                        className="px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer
+                      bg-[#12121a] border border-[#22222e] text-zinc-500
+                      hover:bg-indigo-500/8 hover:border-indigo-500/25 hover:text-indigo-300
+                      transition-all duration-150"
                                     >
                                         {suggestion}
                                     </motion.button>
                                 ))}
                             </div>
                         ) : (
-                            /* Example prompts for new diagram */
+                            /* Example prompts */
                             EXAMPLE_PROMPTS.map((example, i) => (
                                 <motion.button
                                     key={i}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 * i }}
+                                    transition={{ delay: 0.06 * i }}
                                     whileHover={{ x: 4 }}
                                     onClick={() => handleExampleClick(example.prompt)}
-                                    className="w-full text-left px-3 py-2.5 rounded-lg bg-[#16161d]/50 border border-transparent
-                    hover:bg-[#1e1e28] hover:border-[#27272f] transition-all group"
+                                    className="w-full text-left px-3 py-2.5 rounded-xl bg-transparent border border-transparent
+                    hover:bg-[#12121a] hover:border-[#22222e] transition-all group cursor-pointer"
                                 >
-                                    <span className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">
+                                    <span className="text-xs font-medium text-zinc-400 group-hover:text-white transition-colors">
                                         {example.label}
                                     </span>
-                                    <p className="text-[10px] text-zinc-600 mt-0.5 truncate">{example.prompt}</p>
+                                    <p className="text-[10px] text-zinc-700 mt-0.5 truncate group-hover:text-zinc-500 transition-colors">
+                                        {example.prompt}
+                                    </p>
                                 </motion.button>
                             ))
                         )}
                     </div>
 
-                    {/* Bottom spacer */}
+                    {/* Spacer */}
                     <div className="flex-1" />
 
                     {/* Footer */}
-                    <div className="pt-4 border-t border-[#27272f] mt-4">
-                        <p className="text-[10px] text-zinc-600 text-center">
-                            Powered by Google Gemini AI
-                        </p>
+                    <div className="pt-4 border-t border-[#1a1a24] mt-4">
+                        <div className="flex items-center justify-center gap-1.5">
+                            <svg className="w-3 h-3 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <p className="text-[10px] text-zinc-700 font-medium">
+                                Powered by Google Gemini
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}

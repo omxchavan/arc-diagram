@@ -109,7 +109,7 @@ export default function HomePage() {
   const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#0d0d12] text-white overflow-x-hidden">
+    <div ref={containerRef} className="min-h-screen bg-[#0a0a10] text-white overflow-x-hidden">
       {/* Navigation */}
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
@@ -117,7 +117,7 @@ export default function HomePage() {
         transition={{ duration: 0.6 }}
         className="fixed top-0 left-0 right-0 z-50 border-b border-white/5"
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between backdrop-blur-xl bg-[#0d0d12]/70">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between backdrop-blur-xl bg-[#0a0a10]/70">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ export default function HomePage() {
                   d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
-            <span className="text-base font-bold tracking-tight">Arc Diagram</span>
+            <span className="text-base font-bold tracking-tight"><span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Arc</span> Diagram</span>
           </div>
           <div className="flex items-center gap-4">
             <a href="#features" className="text-sm text-zinc-400 hover:text-white transition-colors hidden sm:block">
@@ -152,8 +152,8 @@ export default function HomePage() {
       >
         {/* Background effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-indigo-600/8 rounded-full blur-[120px]" />
-          <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-purple-600/6 rounded-full blur-[100px]" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-indigo-600/6 rounded-full blur-[140px]" />
+          <div className="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[120px]" />
         </div>
 
         <div className="relative max-w-4xl mx-auto text-center">
@@ -188,7 +188,7 @@ export default function HomePage() {
             transition={{ delay: 0.4 }}
             className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            Arc Diagram transforms your ideas into stunning architecture diagrams instantly.
+            <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent font-semibold">Arc Diagram</span> transforms your ideas into stunning architecture diagrams instantly.
             No sign-up. No learning curve. Just describe your system and watch it come to life.
           </motion.p>
 
@@ -320,7 +320,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section id="features" className="py-24 px-6 bg-[#0a0a10]">
+      <section id="features" className="py-24 px-6 bg-[#080810]">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

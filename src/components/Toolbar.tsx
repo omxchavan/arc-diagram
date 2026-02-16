@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useDiagramStore } from "@/store/diagramStore";
 
 export function Toolbar() {
@@ -16,30 +17,34 @@ export function Toolbar() {
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="h-14 bg-[#111118]/80 backdrop-blur-xl border-b border-[#27272f] 
-        flex items-center justify-between px-5 z-50 flex-shrink-0"
+            className="h-14 bg-[#0e0e16]/90 backdrop-blur-2xl border-b border-[#1e1e2a] 
+        flex items-center justify-between px-4 z-50 flex-shrink-0"
         >
-            {/* Left: App name */}
-            <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            {/* Left: Logo + Name */}
+            <Link href="/" className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center 
+          shadow-lg shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-all">
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                 </div>
-                <div>
-                    <h1 className="text-sm font-bold text-white tracking-tight">Instant AI Diagram</h1>
-                    <p className="text-[10px] text-zinc-600 -mt-0.5">AI-powered architecture diagrams</p>
+                <div className="leading-tight">
+                    <h1 className="text-sm font-bold tracking-tight">
+                        <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Arc</span>
+                        <span className="text-white ml-1">Diagram</span>
+                    </h1>
+                    <p className="text-[10px] text-zinc-600 font-medium">AI Architecture Editor</p>
                 </div>
-            </div>
+            </Link>
 
             {/* Center: Actions */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 bg-[#12121a]/80 rounded-xl p-1 border border-[#1e1e2a]">
                 {/* Undo / Redo */}
                 <ToolbarButton
                     onClick={undo}
                     disabled={!canUndo}
-                    tooltip="Undo"
+                    tooltip="Undo (⌘Z)"
                     icon={
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -50,7 +55,7 @@ export function Toolbar() {
                 <ToolbarButton
                     onClick={redo}
                     disabled={!canRedo}
-                    tooltip="Redo"
+                    tooltip="Redo (⌘⇧Z)"
                     icon={
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -59,7 +64,7 @@ export function Toolbar() {
                     }
                 />
 
-                <div className="w-px h-5 bg-[#27272f] mx-1.5" />
+                <div className="w-px h-5 bg-[#22222e] mx-0.5" />
 
                 {/* Auto Layout */}
                 <ToolbarButton
@@ -74,18 +79,18 @@ export function Toolbar() {
                     }
                 />
 
-                <div className="w-px h-5 bg-[#27272f] mx-1.5" />
+                <div className="w-px h-5 bg-[#22222e] mx-0.5" />
 
                 {/* Export PNG */}
                 <ToolbarButton
                     onClick={() => exportPNG()}
                     disabled={!hasNodes}
-                    tooltip="Export PNG"
+                    tooltip="Export as PNG"
                     label="PNG"
                     icon={
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                     }
                 />
@@ -93,17 +98,17 @@ export function Toolbar() {
                 <ToolbarButton
                     onClick={exportJSON}
                     disabled={!hasNodes}
-                    tooltip="Export JSON"
+                    tooltip="Export as JSON"
                     label="JSON"
                     icon={
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                 d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                         </svg>
                     }
                 />
 
-                <div className="w-px h-5 bg-[#27272f] mx-1.5" />
+                <div className="w-px h-5 bg-[#22222e] mx-0.5" />
 
                 {/* Clear */}
                 <ToolbarButton
@@ -120,16 +125,18 @@ export function Toolbar() {
                 />
             </div>
 
-            {/* Right: badge */}
-            <div className="flex items-center gap-2">
+            {/* Right: Status badge */}
+            <div className="flex items-center gap-3 min-w-[100px] justify-end">
                 {hasNodes && (
-                    <motion.span
+                    <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="text-[10px] px-2 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400"
+                        className="flex items-center gap-2"
                     >
-                        {nodes.length} nodes
-                    </motion.span>
+                        <span className="text-[10px] px-2.5 py-1 rounded-lg bg-indigo-500/8 border border-indigo-500/15 text-indigo-400 font-medium">
+                            {nodes.length} nodes
+                        </span>
+                    </motion.div>
                 )}
             </div>
         </motion.header>
@@ -159,17 +166,17 @@ function ToolbarButton({
             disabled={disabled}
             title={tooltip}
             className={`
-        h-8 rounded-lg flex items-center justify-center gap-1.5 transition-all
-        disabled:opacity-30 disabled:cursor-not-allowed
-        ${label ? "px-2.5" : "w-8"}
+        h-8 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-150
+        disabled:opacity-25 disabled:cursor-not-allowed cursor-pointer
+        ${label ? "px-3" : "w-8"}
         ${variant === "danger"
-                    ? "text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
-                    : "text-zinc-400 hover:text-white hover:bg-[#1e1e28]"
+                    ? "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
+                    : "text-zinc-500 hover:text-white hover:bg-white/5"
                 }
       `}
         >
             {icon}
-            {label && <span className="text-[10px] font-medium">{label}</span>}
+            {label && <span className="text-[10px] font-semibold tracking-wide">{label}</span>}
         </motion.button>
     );
 }

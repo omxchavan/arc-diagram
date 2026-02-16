@@ -82,18 +82,19 @@ function convertDiagramData(data: DiagramData): { nodes: Node[]; edges: Edge[] }
     return getLayoutedElements(nodes, edges);
 }
 
-function triggerDownload(url: string, filename: string) {
+function downloadBlob(blob: Blob, filename: string) {
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = filename;
     link.style.display = "none";
     document.body.appendChild(link);
     link.click();
-    // Small delay before cleanup to ensure download initiates
+    // Long delay to ensure the browser fully starts the download
     setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }, 100);
+    }, 10000);
 }
 
 export const useDiagramStore = create<DiagramState>((set, get) => ({
@@ -249,8 +250,7 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
         const blob = new Blob([JSON.stringify(data, null, 2)], {
             type: "application/json",
         });
-        const url = URL.createObjectURL(blob);
-        triggerDownload(url, "diagram.json");
+        downloadBlob(blob, "diagram.json");
     },
 
     exportPNG: async () => {
@@ -267,7 +267,7 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
             }
 
             const dataUrl = await toPng(el, {
-                backgroundColor: "#0d0d12",
+                backgroundColor: "#0a0a10",
                 quality: 1,
                 pixelRatio: 2,
                 filter: (node: HTMLElement) => {
@@ -285,7 +285,10 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
                 },
             });
 
-            triggerDownload(dataUrl, "diagram.png");
+            // Convert data URL to blob — browsers ignore the download attribute on data URLs
+            const res = await fetch(dataUrl);
+            const blob = await res.blob();
+            downloadBlob(blob, "diagram.png");
         } catch (err) {
             console.error("Failed to export PNG:", err);
             set({ error: "Failed to export PNG. Please try again." });

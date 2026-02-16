@@ -53,29 +53,34 @@ function CustomNodeComponent({ id, data, selected }: NodeProps) {
             <Handle
                 type="target"
                 position={Position.Top}
-                className="!bg-indigo-500 !border-[#16161d] !w-2 !h-2 group-hover:!w-3 group-hover:!h-3 transition-all"
+                className="!bg-indigo-500 !border-[#0a0a10] !w-2 !h-2 group-hover:!w-3 group-hover:!h-3 transition-all"
             />
 
             <div
                 className={`
-          relative min-w-[180px] px-5 py-4 rounded-2xl
-          bg-gradient-to-br from-[#1e1e2a] to-[#16161d]
+          relative min-w-[170px] max-w-[220px] px-4 py-3.5 rounded-xl
+          bg-gradient-to-br from-[#16161f] to-[#111118]
           border transition-all duration-300 cursor-grab active:cursor-grabbing
           ${selected
-                        ? "border-indigo-500/60 shadow-[0_0_20px_rgba(99,102,241,0.3),0_8px_32px_rgba(0,0,0,0.4)]"
-                        : "border-[#27272f] shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:border-[#3f3f50] hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]"
+                        ? "border-indigo-500/50 shadow-[0_0_25px_rgba(99,102,241,0.2),0_8px_32px_rgba(0,0,0,0.5)]"
+                        : "border-[#22222e] shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:border-[#2e2e40] hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
                     }
         `}
                 style={selected ? { animation: "nodeGlow 2s ease-in-out infinite" } : {}}
             >
-                {/* Gradient accent line at top */}
-                <div className="absolute top-0 left-4 right-4 h-[2px] rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 opacity-60" />
+                {/* Accent line */}
+                <div className={`absolute top-0 left-3 right-3 h-[1.5px] rounded-full bg-gradient-to-r 
+          ${selected ? "from-indigo-400 via-purple-400 to-indigo-400 opacity-80" : "from-indigo-500 via-purple-500 to-indigo-500 opacity-30"} transition-opacity`} />
 
-                {/* Icon area */}
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                {/* Content */}
+                <div className="flex items-center gap-2.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all
+            ${selected
+                            ? "bg-indigo-500/20 border border-indigo-500/30"
+                            : "bg-indigo-500/10 border border-indigo-500/10"
+                        }`}>
                         <svg
-                            className="w-4 h-4 text-indigo-400"
+                            className="w-3.5 h-3.5 text-indigo-400"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -97,10 +102,10 @@ function CustomNodeComponent({ id, data, selected }: NodeProps) {
                                 onChange={(e) => setEditValue(e.target.value)}
                                 onBlur={handleSubmit}
                                 onKeyDown={handleKeyDown}
-                                className="w-full bg-transparent text-sm font-semibold text-white border-b border-indigo-500 outline-none py-0.5"
+                                className="w-full bg-transparent text-[13px] font-semibold text-white border-b border-indigo-500/50 outline-none py-0.5"
                             />
                         ) : (
-                            <span className="text-sm font-semibold text-white/90 truncate block">
+                            <span className="text-[13px] font-semibold text-white/85 truncate block leading-snug">
                                 {data.label as string}
                             </span>
                         )}
@@ -114,17 +119,17 @@ function CustomNodeComponent({ id, data, selected }: NodeProps) {
                         deleteNode(id);
                     }}
                     className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500/80 text-white 
-            flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 
-            transition-opacity hover:bg-red-500 z-10"
+            flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 
+            transition-all hover:bg-red-500 hover:scale-110 z-10 cursor-pointer shadow-lg shadow-red-500/20"
                 >
-                    ×
+                    ✕
                 </button>
             </div>
 
             <Handle
                 type="source"
                 position={Position.Bottom}
-                className="!bg-indigo-500 !border-[#16161d] !w-2 !h-2 group-hover:!w-3 group-hover:!h-3 transition-all"
+                className="!bg-indigo-500 !border-[#0a0a10] !w-2 !h-2 group-hover:!w-3 group-hover:!h-3 transition-all"
             />
         </motion.div>
     );

@@ -2,11 +2,11 @@
 @import "@xyflow/react/dist/style.css";
 
 @theme inline {
-  --color-background: #0d0d12;
+  --color-background: #0a0a10;
   --color-foreground: #e4e4e7;
-  --color-surface: #16161d;
-  --color-surface-hover: #1e1e28;
-  --color-border: #27272f;
+  --color-surface: #12121a;
+  --color-surface-hover: #1a1a26;
+  --color-border: #22222e;
   --color-accent: #6366f1;
   --color-accent-hover: #818cf8;
   --color-accent-glow: rgba(99, 102, 241, 0.35);
@@ -14,14 +14,27 @@
   --color-danger: #ef4444;
   --color-success: #22c55e;
   --color-muted: #71717a;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Selection */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: white;
 }
 
 /* React Flow overrides for dark theme */
@@ -74,7 +87,7 @@ body {
 }
 
 .react-flow__edge-path {
-  stroke: #4b5563 !important;
+  stroke: #3b3b54 !important;
   stroke-width: 2 !important;
 }
 
@@ -86,6 +99,20 @@ body {
 
 .react-flow__edge-path {
   transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.react-flow__edge-text {
+  font-size: 11px !important;
+}
+
+.react-flow__edge-textbg {
+  fill: var(--color-surface) !important;
+  rx: 4 !important;
+  ry: 4 !important;
+}
+
+.react-flow__edgelabel-renderer text {
+  fill: var(--color-muted) !important;
 }
 
 .react-flow__handle {
@@ -116,21 +143,48 @@ body {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-muted);
 }
 
 /* Glow animation for selected nodes */
 @keyframes nodeGlow {
-  0%, 100% { box-shadow: 0 0 15px var(--color-accent-glow), 0 4px 20px rgba(0,0,0,0.4); }
-  50% { box-shadow: 0 0 25px var(--color-accent-glow), 0 4px 20px rgba(0,0,0,0.4); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 15px var(--color-accent-glow), 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 30px var(--color-accent-glow), 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Fade-in keyframe for non-framer elements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
 }
