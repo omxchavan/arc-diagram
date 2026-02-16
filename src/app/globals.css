@@ -1,26 +1,136 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import "@xyflow/react/dist/style.css";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: #0d0d12;
+  --color-foreground: #e4e4e7;
+  --color-surface: #16161d;
+  --color-surface-hover: #1e1e28;
+  --color-border: #27272f;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-glow: rgba(99, 102, 241, 0.35);
+  --color-purple: #a855f7;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-muted: #71717a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* React Flow overrides for dark theme */
+.react-flow__background {
+  background-color: var(--color-background) !important;
+}
+
+.react-flow__minimap {
+  background-color: var(--color-surface) !important;
+  border-radius: 12px;
+  border: 1px solid var(--color-border) !important;
+  overflow: hidden;
+}
+
+.react-flow__minimap-mask {
+  fill: rgba(99, 102, 241, 0.08) !important;
+}
+
+.react-flow__minimap-node {
+  fill: var(--color-accent) !important;
+  stroke: none !important;
+}
+
+.react-flow__controls {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.react-flow__controls-button {
+  background-color: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 10px !important;
+  color: var(--color-foreground) !important;
+  fill: var(--color-foreground) !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-bottom: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--color-surface-hover) !important;
+  border-color: var(--color-accent) !important;
+}
+
+.react-flow__controls-button svg {
+  max-width: 14px !important;
+  max-height: 14px !important;
+}
+
+.react-flow__edge-path {
+  stroke: #4b5563 !important;
+  stroke-width: 2 !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--color-accent) !important;
+  stroke-width: 2.5 !important;
+  filter: drop-shadow(0 0 6px var(--color-accent-glow));
+}
+
+.react-flow__edge-path {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.react-flow__handle {
+  width: 8px !important;
+  height: 8px !important;
+  background-color: var(--color-accent) !important;
+  border: 2px solid var(--color-surface) !important;
+  transition: all 0.2s ease !important;
+}
+
+.react-flow__handle:hover {
+  width: 10px !important;
+  height: 10px !important;
+  background-color: var(--color-accent-hover) !important;
+}
+
+/* Animated edge dashes */
+.react-flow__edge.animated path {
+  stroke-dasharray: 5 5;
+  animation: edgeFlow 1s linear infinite;
+}
+
+@keyframes edgeFlow {
+  to {
+    stroke-dashoffset: -10;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* Glow animation for selected nodes */
+@keyframes nodeGlow {
+  0%, 100% { box-shadow: 0 0 15px var(--color-accent-glow), 0 4px 20px rgba(0,0,0,0.4); }
+  50% { box-shadow: 0 0 25px var(--color-accent-glow), 0 4px 20px rgba(0,0,0,0.4); }
 }
