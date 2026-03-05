@@ -77,6 +77,10 @@ function convertDiagramData(data: DiagramData): { nodes: Node[]; edges: Edge[] }
         type: "smoothstep",
         animated: true,
         style: { stroke: "#4b5563", strokeWidth: 2 },
+        labelBgStyle: { fill: "#12121e", fillOpacity: 0.8 },
+        labelStyle: { fill: "#f4f4f5", fontWeight: 600 },
+        labelBgPadding: [6, 4],
+        labelBgBorderRadius: 6,
     }));
 
     return getLayoutedElements(nodes, edges);
@@ -133,6 +137,10 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
                     type: "smoothstep",
                     animated: true,
                     style: { stroke: "#4b5563", strokeWidth: 2 },
+                    labelBgStyle: { fill: "#12121e", fillOpacity: 0.8 },
+                    labelStyle: { fill: "#f4f4f5", fontWeight: 600 },
+                    labelBgPadding: [6, 4],
+                    labelBgBorderRadius: 6,
                 },
                 s.edges
             ),

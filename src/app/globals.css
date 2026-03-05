@@ -102,17 +102,23 @@ body {
 }
 
 .react-flow__edge-text {
-  font-size: 11px !important;
+  font-size: 11.5px !important;
+  fill: #ffffff !important;
+  font-weight: 600 !important;
+  pointer-events: none;
 }
 
 .react-flow__edge-textbg {
-  fill: var(--color-surface) !important;
-  rx: 4 !important;
-  ry: 4 !important;
+  fill: #1a1a2e !important;
+  rx: 6 !important;
+  ry: 6 !important;
+  stroke: #4b5563 !important;
+  stroke-width: 1px !important;
+  fill-opacity: 0.95 !important;
 }
 
 .react-flow__edgelabel-renderer text {
-  fill: var(--color-muted) !important;
+  fill: var(--color-foreground) !important;
 }
 
 .react-flow__handle {

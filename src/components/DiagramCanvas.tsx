@@ -49,6 +49,10 @@ export function DiagramCanvas() {
                     type: "smoothstep",
                     animated: true,
                     style: { stroke: "#3b3b54", strokeWidth: 2 },
+                    labelBgStyle: { fill: "#12121e", fillOpacity: 0.9 },
+                    labelStyle: { fill: "#f4f4f5", fontWeight: 600, fontSize: "11.5px" },
+                    labelBgPadding: [6, 4],
+                    labelBgBorderRadius: 6,
                 }}
             >
                 <Background
