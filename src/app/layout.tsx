@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description:
     "Create beautiful system architecture diagrams instantly with AI. No login required. Describe your system and watch it come to life.",
   keywords: ["architecture diagram", "AI diagram", "system design", "diagram generator"],
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
