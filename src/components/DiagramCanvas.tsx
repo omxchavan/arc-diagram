@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import {
     ReactFlow,
     Background,
     BackgroundVariant,
     Controls,
     MiniMap,
+    useReactFlow,
     type NodeTypes,
 } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,8 +21,16 @@ const nodeTypes: NodeTypes = {
 export function DiagramCanvas() {
     const { nodes, edges, onNodesChange, onEdgesChange, onConnect, isGenerating } =
         useDiagramStore();
+    const { fitView } = useReactFlow();
     const reactFlowRef = useRef<HTMLDivElement>(null);
     const isEmpty = nodes.length === 0 && !isGenerating;
+
+    // Auto-fit view when nodes change (after generation or layout)
+    useEffect(() => {
+        if (nodes.length > 0) {
+            fitView({ padding: 0.2, duration: 800 });
+        }
+    }, [nodes.length, fitView]);
 
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
@@ -29,7 +38,7 @@ export function DiagramCanvas() {
     }, []);
 
     return (
-        <div ref={reactFlowRef} className="flex-1 relative" id="diagram-canvas">
+        <div ref={reactFlowRef} className="h-full w-full relative" id="diagram-canvas">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -43,7 +52,7 @@ export function DiagramCanvas() {
                 minZoom={0.1}
                 maxZoom={2}
                 deleteKeyCode={["Backspace", "Delete"]}
-                className="bg-[#0a0a10]"
+                className="bg-[#07070a]"
                 proOptions={{ hideAttribution: true }}
                 defaultEdgeOptions={{
                     type: "smoothstep",

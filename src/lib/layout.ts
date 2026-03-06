@@ -17,7 +17,7 @@ export function getLayoutedElements(
     ranksep: 100,
     edgesep: 40,
     marginx: 40,
-    marginy: 40,
+    marginy: 100,
   });
 
   nodes.forEach((node) => {
