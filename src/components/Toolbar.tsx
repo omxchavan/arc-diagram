@@ -14,11 +14,11 @@ export function Toolbar() {
 
     return (
         <motion.header
-            initial={{ y: -60, opacity: 0 }}
+            initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="h-14 bg-[#0e0e16]/90 backdrop-blur-2xl border-b border-[#1e1e2a] 
-        flex items-center justify-between px-4 z-50 flex-shrink-0"
+            className="fixed top-6 left-1/2 -translateX-1/2 h-14 px-5 z-50
+        glass-island rounded-[20px] flex items-center gap-6"
         >
             {/* Left: Logo + Name */}
             <Link href="/" className="flex items-center gap-3 group">

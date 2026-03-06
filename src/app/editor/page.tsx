@@ -26,10 +26,10 @@ function DiagramApp() {
     }, [searchParams, setPrompt]);
 
     return (
-        <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#0a0a10]">
+        <div className="relative h-screen w-screen overflow-hidden bg-[#07070a]">
             <Toolbar />
-            <div className="flex flex-1 overflow-hidden">
-                <PromptPanel />
+            <PromptPanel />
+            <div className="absolute inset-0 z-0">
                 <DiagramCanvas />
             </div>
         </div>

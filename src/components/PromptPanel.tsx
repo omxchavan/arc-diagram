@@ -42,24 +42,34 @@ export function PromptPanel() {
 
     return (
         <motion.div
-            initial={{ x: -300, opacity: 0 }}
+            initial={{ x: -400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
             className={`
-        relative flex flex-col h-full
-        bg-[#0e0e16]/95 backdrop-blur-2xl border-r border-[#1e1e2a]
-        transition-all duration-300
-        ${isCollapsed ? "w-12" : "w-[340px]"}
+        fixed left-6 top-24 bottom-6 z-40
+        flex flex-col
+        glass-island rounded-[24px] overflow-hidden
+        transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]
+        ${isCollapsed ? "w-14" : "w-[360px]"}
       `}
         >
             {/* Collapse toggle */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-4 z-10 w-6 h-6 rounded-full bg-[#16161d] border border-[#22222e] 
-          flex items-center justify-center text-xs text-zinc-500 hover:text-white hover:border-indigo-500 
-          transition-all shadow-lg shadow-black/20 cursor-pointer"
+                className="absolute -right-3.5 top-1/2 -translate-y-1/2 z-50 w-7 h-12 rounded-full 
+          bg-[#1a1a2e]/90 border border-white/10 flex items-center justify-center 
+          text-zinc-400 hover:text-indigo-400 hover:border-indigo-500/30 
+          transition-all shadow-[0_4px_24px_rgba(0,0,0,0.5)] cursor-pointer group backdrop-blur-md"
             >
-                {isCollapsed ? "›" : "‹"}
+                <motion.svg
+                    animate={{ rotate: isCollapsed ? 180 : 0 }}
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                </motion.svg>
             </button>
 
             {isCollapsed ? (
@@ -71,19 +81,19 @@ export function PromptPanel() {
             ) : (
                 <div className="flex flex-col h-full p-5 overflow-y-auto">
                     {/* Header */}
-                    <div className="mb-5">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="w-5 h-5 rounded-md bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center">
-                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                    <div className="mb-6">
+                        <div className="flex items-center gap-2.5 mb-3">
+                            <div className="w-6 h-6 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                                <div className="w-2 h-2 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)] animate-pulse" />
                             </div>
-                            <span className="text-[10px] font-semibold text-indigo-400 uppercase tracking-[0.15em]">
-                                {hasExistingDiagram ? "Edit Mode" : "AI Powered"}
+                            <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.2em]">
+                                {hasExistingDiagram ? "Edit Mode" : "AI Architect"}
                             </span>
                         </div>
-                        <h2 className="text-lg font-bold text-white leading-tight">
-                            {hasExistingDiagram ? "Edit with AI" : "Create Diagram"}
+                        <h2 className="text-xl font-extrabold text-white tracking-tight leading-none">
+                            {hasExistingDiagram ? "Refine Design" : "New Diagram"}
                         </h2>
-                        <p className="text-[11px] text-zinc-500 mt-1 leading-relaxed">
+                        <p className="text-[12px] text-zinc-500 mt-2 font-medium leading-relaxed opacity-80">
                             {hasExistingDiagram
                                 ? "Describe changes — AI will intelligently update your diagram"
                                 : "Describe your system architecture or idea"}
