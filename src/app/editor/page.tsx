@@ -7,6 +7,7 @@ import { Toolbar } from "@/components/Toolbar";
 import { PromptPanel } from "@/components/PromptPanel";
 import { DiagramCanvas } from "@/components/DiagramCanvas";
 import { useDiagramStore } from "@/store/diagramStore";
+import SetupScreen from "@/components/SetupScreen";
 
 function DiagramApp() {
     const loadFromLocalStorage = useDiagramStore((s) => s.loadFromLocalStorage);
@@ -25,8 +26,11 @@ function DiagramApp() {
         }
     }, [searchParams, setPrompt]);
 
+    const { isInitialSetup } = useDiagramStore();
+
     return (
         <div className="relative h-screen w-screen overflow-hidden bg-[#07070a]">
+            {isInitialSetup && <SetupScreen />}
             <Toolbar />
             <PromptPanel />
             <div className="absolute inset-0 z-0">

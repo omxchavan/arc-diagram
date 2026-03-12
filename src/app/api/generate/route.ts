@@ -1,60 +1,66 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-const SYSTEM_PROMPT = `You are a system architecture diagram generator. Given a description of a system or idea, generate a diagram as JSON.
+const SYSTEM_PROMPT = `You are an expert diagram generator. Convert the user's description into structured JSON for a {diagramType} diagram.
+
+DETAIL LEVEL: {detailLevel}
+- simple: 3-5 core nodes, high-level overview
+- balanced: 6-8 nodes, standard detail
+- detailed: 10-12 nodes, comprehensive breakdown
+
+SUPPORTED DIAGRAM TYPES:
+- flowchart: Process flows, logic, steps (Top -> Bottom)
+- architecture: System components, services, cloud infra (Left -> Right)
+- er: Database entities, relationships, fields (Clustered)
+- mindmap: Topics, ideas, brainstorming (Radial/Centered)
 
 RULES:
 - Return ONLY valid JSON, no markdown, no extra text
-- Maximum 10-12 nodes
+- Adhere strictly to the requested DETAIL LEVEL for node count
 - Use short, clean labels (2-4 words max)
+- For "er" diagrams, include a "fields" array in each node (3-5 core fields)
 - Create logical connections between nodes
-- Use meaningful IDs (e.g., "frontend", "api", "db")
-- Think about real architectures and create accurate relationships
+- Use meaningful IDs
 
 OUTPUT FORMAT:
 {
+  "diagramType": "{diagramType}",
   "nodes": [
-    { "id": "unique_id", "label": "Short Label" }
+    { "id": "id", "label": "Label", "fields": ["field1", "field2"] }
   ],
   "edges": [
-    { "source": "source_id", "target": "target_id", "label": "optional relationship" }
+    { "source": "s", "target": "t", "label": "relationship" }
   ]
 }`;
 
-const EDIT_PROMPT = `You are a system architecture diagram editor. The user has an existing diagram and wants to modify it based on their instruction.
+const EDIT_PROMPT = `You are a diagram editor for {diagramType} diagrams. The user has an existing diagram and wants to modify it.
 
 EXISTING DIAGRAM:
 {existingDiagram}
 
 USER INSTRUCTION: {userPrompt}
+DETAIL LEVEL: {detailLevel}
 
 RULES:
 - Return ONLY valid JSON, no markdown, no extra text
-- Modify the existing diagram based on the user's instruction
-- You can add, remove, or rename nodes and edges
-- Keep IDs consistent for unchanged nodes
-- Maximum 10-12 nodes
-- Use short, clean labels (2-4 words max)
+- Modify based on instruction while keeping diagram type consistent
+- Try to maintain the requested DETAIL LEVEL for complexity
+- You can add, remove, or rename nodes/edges/fields
+- Use short, clean labels
 
 OUTPUT FORMAT:
 {
-  "nodes": [
-    { "id": "unique_id", "label": "Short Label" }
-  ],
-  "edges": [
-    { "source": "source_id", "target": "target_id", "label": "optional relationship" }
-  ]
+  "diagramType": "{diagramType}",
+  "nodes": [ { "id": "id", "label": "Label", "fields": [] } ],
+  "edges": [ { "source": "s", "target": "t", "label": "rel" } ]
 }`;
 
 export async function POST(request: NextRequest) {
     try {
-        const { prompt, existingDiagram } = await request.json();
+        const { prompt, diagramType, detailLevel, existingDiagram } = await request.json();
 
         if (!prompt || typeof prompt !== "string") {
-            return NextResponse.json(
-                { error: "Prompt is required" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
         }
 
         const apiKey = process.env.GEMINI_API_KEY;
@@ -71,10 +77,15 @@ export async function POST(request: NextRequest) {
         let fullPrompt: string;
         if (existingDiagram && existingDiagram.nodes && existingDiagram.nodes.length > 0) {
             fullPrompt = EDIT_PROMPT
+                .replaceAll("{diagramType}", diagramType)
+                .replaceAll("{detailLevel}", detailLevel || "balanced")
                 .replace("{existingDiagram}", JSON.stringify(existingDiagram, null, 2))
                 .replace("{userPrompt}", prompt);
         } else {
-            fullPrompt = `${SYSTEM_PROMPT}\n\nUser request: ${prompt}`;
+            fullPrompt = `${SYSTEM_PROMPT
+                .replaceAll("{diagramType}", diagramType)
+                .replaceAll("{detailLevel}", detailLevel || "balanced")
+                }\n\nUser request: ${prompt}`;
         }
 
         const response = await ai.models.generateContent({

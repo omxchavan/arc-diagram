@@ -11,7 +11,7 @@ import {
     type Connection,
 } from "@xyflow/react";
 import { getLayoutedElements } from "@/lib/layout";
-import type { DiagramData } from "@/lib/types";
+import type { DiagramData, DiagramType, DetailLevel } from "@/lib/types";
 
 const STORAGE_KEY = "instant-ai-diagram";
 
@@ -24,7 +24,10 @@ interface DiagramState {
     nodes: Node[];
     edges: Edge[];
     prompt: string;
+    diagramType: DiagramType;
+    detailLevel: DetailLevel;
     isGenerating: boolean;
+    isInitialSetup: boolean;
     error: string | null;
 
     // History
@@ -33,6 +36,10 @@ interface DiagramState {
 
     // Actions
     setPrompt: (prompt: string) => void;
+    setDiagramType: (type: DiagramType) => void;
+    setDetailLevel: (level: DetailLevel) => void;
+    finishSetup: () => void;
+    updateNodeData: (id: string, data: Partial<any>) => void;
     onNodesChange: OnNodesChange;
     onEdgesChange: OnEdgesChange;
     onConnect: OnConnect;
@@ -64,8 +71,12 @@ function pushHistory(state: DiagramState): Partial<DiagramState> {
 function convertDiagramData(data: DiagramData): { nodes: Node[]; edges: Edge[] } {
     const nodes: Node[] = data.nodes.map((n) => ({
         id: n.id,
-        type: "custom",
-        data: { label: n.label },
+        type: data.diagramType, // Set the node type based on diagram type
+        data: { 
+          label: n.label,
+          fields: n.fields || [],
+          diagramType: data.diagramType
+        },
         position: { x: 0, y: 0 },
     }));
 
@@ -74,8 +85,8 @@ function convertDiagramData(data: DiagramData): { nodes: Node[]; edges: Edge[] }
         source: e.source,
         target: e.target,
         label: e.label || "",
-        type: "smoothstep",
-        animated: true,
+        type: data.diagramType === "mindmap" ? "straight" : "smoothstep",
+        animated: data.diagramType === "flowchart" || data.diagramType === "architecture",
         style: { stroke: "#4b5563", strokeWidth: 2 },
         labelBgStyle: { fill: "#12121e", fillOpacity: 0.8 },
         labelStyle: { fill: "#f4f4f5", fontWeight: 600 },
@@ -83,7 +94,7 @@ function convertDiagramData(data: DiagramData): { nodes: Node[]; edges: Edge[] }
         labelBgBorderRadius: 6,
     }));
 
-    return getLayoutedElements(nodes, edges);
+    return getLayoutedElements(nodes, edges, data.diagramType);
 }
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -105,12 +116,32 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
     nodes: [],
     edges: [],
     prompt: "",
+    diagramType: "flowchart",
+    detailLevel: "balanced",
     isGenerating: false,
+    isInitialSetup: true,
     error: null,
     past: [],
     future: [],
 
     setPrompt: (prompt: string) => set({ prompt }),
+    setDiagramType: (diagramType: DiagramType) => set({ diagramType }),
+    setDetailLevel: (detailLevel: DetailLevel) => set({ detailLevel }),
+    finishSetup: () => set({ isInitialSetup: false }),
+    
+    updateNodeData: (id, data) => {
+        const hist = { nodes: get().nodes, edges: get().edges };
+        set((state) => ({
+            past: [...state.past, hist].slice(-50),
+            future: [],
+            nodes: state.nodes.map((node) => {
+                if (node.id === id) {
+                    return { ...node, data: { ...node.data, ...data } };
+                }
+                return node;
+            }),
+        }));
+    },
 
     onNodesChange: (changes) => {
         set((state) => ({
@@ -134,8 +165,8 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
             edges: addEdge(
                 {
                     ...connection,
-                    type: "smoothstep",
-                    animated: true,
+                    type: s.diagramType === "mindmap" ? "straight" : "smoothstep",
+                    animated: s.diagramType === "flowchart" || s.diagramType === "architecture",
                     style: { stroke: "#4b5563", strokeWidth: 2 },
                     labelBgStyle: { fill: "#12121e", fillOpacity: 0.8 },
                     labelStyle: { fill: "#f4f4f5", fontWeight: 600 },
@@ -202,6 +233,8 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     prompt: state.prompt,
+                    diagramType: state.diagramType,
+                    detailLevel: state.detailLevel,
                     existingDiagram,
                 }),
             });
@@ -227,7 +260,7 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
         const state = get();
         if (state.nodes.length === 0) return;
         const hist = pushHistory(state);
-        const { nodes, edges } = getLayoutedElements(state.nodes, state.edges);
+        const { nodes, edges } = getLayoutedElements(state.nodes, state.edges, state.diagramType);
         set({ ...hist, nodes, edges });
         get().saveToLocalStorage();
     },
@@ -359,7 +392,7 @@ export const useDiagramStore = create<DiagramState>((set, get) => ({
             if (raw) {
                 const data = JSON.parse(raw);
                 if (data.nodes && data.edges) {
-                    set({ nodes: data.nodes, edges: data.edges });
+                    set({ nodes: data.nodes, edges: data.edges, isInitialSetup: false });
                 }
             }
         } catch {
